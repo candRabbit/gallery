@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="PopMenu">
+    <attr name="style">
+      <flag name="down"
+          value="0x00"/>
+      <flag name="up"
+          value="0x01"/>
+    </attr>
+  </declare-styleable>
+</resources>
