@@ -26,7 +26,7 @@ public class PhotoManager {
   public static List<PhotoItem> getSysPhotos(Context context) {
     Cursor cursor = context.getContentResolver()
         .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
-    if (null == cursor) return null;
+    if (null == cursor) return new ArrayList<PhotoItem>();
     List<PhotoItem> photoItems = new ArrayList<>();
     while (cursor.moveToNext()) {
       PhotoItem photoItem = new PhotoItem();
