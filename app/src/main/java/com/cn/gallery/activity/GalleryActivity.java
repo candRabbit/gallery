@@ -1,10 +1,22 @@
 package com.cn.gallery.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import com.cn.gallery.Constant;
 import com.cn.gallery.R;
 import com.cn.gallery.fragment.GalleryFragment;
@@ -14,7 +26,6 @@ import com.cn.gallery.model.PhotoItem;
 import com.cn.gallery.utils.CameraUtils;
 import com.cn.gallery.utils.CropUtils;
 import com.cn.gallery.utils.PhotoManager;
-import com.cn.gallery.utils.PictureUtils;
 import com.yalantis.ucrop.UCrop;
 import java.io.File;
 import java.util.ArrayList;
@@ -40,6 +51,7 @@ public class GalleryActivity extends AppCompatActivity
     implements DataSourceDelegate, GalleryPresenter {
   private GalleryFragment galleryFragment;
   private PreviewFragment previewFragment;
+  private Toolbar toolbar;
 
   private PhotoDir photoDir;
   private List<String> checkPhotos;
@@ -97,7 +109,13 @@ public class GalleryActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_gallery);
     initData();
+    initView();
     updateView();
+  }
+
+  private void initView() {
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
   }
 
   private void initData() {
@@ -138,6 +156,8 @@ public class GalleryActivity extends AppCompatActivity
           bundle.putInt(Constant.POSITION, position);
           if (null != photoDir) {
             bundle.putString(Constant.DIR, photoDir.dir);
+          } else {
+            bundle.putString(Constant.DIR, null);
           }
           previewFragment.setArguments(bundle);
           getSupportFragmentManager().beginTransaction()
@@ -148,6 +168,8 @@ public class GalleryActivity extends AppCompatActivity
             Bundle bundle = previewFragment.getArguments();
             if (null != photoDir) {
               bundle.putString(Constant.DIR, photoDir.dir);
+            } else {
+              bundle.putString(Constant.DIR, null);
             }
             bundle.putInt(Constant.POSITION, position);
             getSupportFragmentManager().beginTransaction().attach(previewFragment).commit();
@@ -205,6 +227,25 @@ public class GalleryActivity extends AppCompatActivity
     });
   }
 
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_gallery, menu);
+    MenuItem menuItem = menu.findItem(R.id.menu_sure);
+    Drawable drawable = menuItem.getIcon();
+    drawable.mutate();
+    drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+    menuItem.setIcon(drawable);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_sure:
+        toResult();
+        break;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override public int getMaxCount() {
     return maxCount;
   }
@@ -260,5 +301,33 @@ public class GalleryActivity extends AppCompatActivity
       return;
     }
     super.onBackPressed();
+  }
+
+  @Override public void openCamera() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
+          Manifest.permission.CAMERA)) {
+        CameraUtils.takePhotoByCamera(this);
+      } else {
+        requestPermissions(new String[] { Manifest.permission.CAMERA },
+            Constant.REQUEST_CAMERA_PERMISSION);
+      }
+    } else {
+      CameraUtils.takePhotoByCamera(this);
+    }
+  }
+
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    if (requestCode == Constant.REQUEST_CAMERA_PERMISSION) {
+      for (int grant : grantResults) {
+        if (grant != PackageManager.PERMISSION_GRANTED) {
+          Toast.makeText(this, "权限被拒绝无法访问相机", Toast.LENGTH_SHORT).show();
+          return;
+        }
+      }
+      CameraUtils.takePhotoByCamera(this);
+    }
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 }

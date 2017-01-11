@@ -22,4 +22,6 @@ public interface GalleryPresenter {
   PhotoDir currentPhotoDir();
 
   void setPhotoDir(PhotoDir photoDir);
+
+  void openCamera();
 }

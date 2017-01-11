@@ -24,6 +24,8 @@ public class Constant {
 
   public final static String DIR = "dir";
   public final static String POSITION = "position";
+  public final static int REQUEST_STORAGE_PERMISSION = 997;
+  public final static int REQUEST_CAMERA_PERMISSION = 996;
 
   public final static String COMPRESS_WIDTH = "compressWidth";
   public final static String COMPRESS_HEIGHT = "compressHeight";
@@ -32,6 +34,5 @@ public class Constant {
   public final static String MAX_COUNT = "maxCount";
   public final static String MODE = "mode";
   public final static String QUALITY = "quality";
-  public final static String SELECT_PHOTOS="selectPhotos";
-
+  public final static String SELECT_PHOTOS = "selectPhotos";
 }

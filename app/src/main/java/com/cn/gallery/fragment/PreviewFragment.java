@@ -60,27 +60,31 @@ public class PreviewFragment extends BaseFragment {
       }
     });
 
-    cb.setOnClickListener(v -> {
-      v.setSelected(!v.isSelected());
-      String imgPath = previewAdapter.getPhotoItems().get(viewPager.getCurrentItem()).imgPath;
-      if (v.isSelected()) {
-        if (!dataSourceDelegate.getCheckedPhotos().contains(imgPath)) {
-          if (galleryPresenter.getMode() == GalleryActivity.Mode.SINGLE) {
-            dataSourceDelegate.getCheckedPhotos().clear();
-          }
-          if (galleryPresenter.getMode() == GalleryActivity.Mode.MULTI) {
-            if (dataSourceDelegate.getCheckedPhotos().size() >= Constant.MAX_COUNT) {
-              Toast.makeText(getActivity(), String.format("选择数量不能超过%s张", Constant.MAX_COUNT),
-                  Toast.LENGTH_SHORT).show();
-              v.setSelected(false);
-              return;
+    cb.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        v.setSelected(!v.isSelected());
+        String imgPath = previewAdapter.getPhotoItems().get(viewPager.getCurrentItem()).imgPath;
+        if (v.isSelected()) {
+          if (!dataSourceDelegate.getCheckedPhotos().contains(imgPath)) {
+            if (galleryPresenter.getMode() == GalleryActivity.Mode.SINGLE) {
+              dataSourceDelegate.getCheckedPhotos().clear();
             }
+            if (galleryPresenter.getMode() == GalleryActivity.Mode.MULTI) {
+              if (dataSourceDelegate.getCheckedPhotos().size()
+                  >= dataSourceDelegate.getMaxCount()) {
+                Toast.makeText(getActivity(),
+                    String.format("选择数量不能超过%s张", dataSourceDelegate.getMaxCount()),
+                    Toast.LENGTH_SHORT).show();
+                v.setSelected(false);
+                return;
+              }
+            }
+            dataSourceDelegate.getCheckedPhotos().add(imgPath);
           }
-          dataSourceDelegate.getCheckedPhotos().add(imgPath);
-        }
-      } else {
-        if (dataSourceDelegate.getCheckedPhotos().contains(imgPath)) {
-          dataSourceDelegate.getCheckedPhotos().remove(imgPath);
+        } else {
+          if (dataSourceDelegate.getCheckedPhotos().contains(imgPath)) {
+            dataSourceDelegate.getCheckedPhotos().remove(imgPath);
+          }
         }
       }
     });
@@ -93,13 +97,18 @@ public class PreviewFragment extends BaseFragment {
     super.onActivityCreated(savedInstanceState);
     final String dir = getArguments().getString(Constant.DIR);
     position = getArguments().getInt(Constant.POSITION);
-    dataSourceDelegate.getSysPhotos().subscribe(photoItems -> {
-      if (null != dir) {
-        dataSourceDelegate.getSysPhotosByDir(photoItems, dir).subscribe(dirPhotoItems -> {
-          setDataToViewPager(dirPhotoItems);
-        });
-      } else {
-        setDataToViewPager(photoItems);
+    dataSourceDelegate.getSysPhotos().subscribe(new Action1<List<PhotoItem>>() {
+      @Override public void call(List<PhotoItem> photoItems) {
+        if (null != dir) {
+          dataSourceDelegate.getSysPhotosByDir(photoItems, dir)
+              .subscribe(new Action1<List<PhotoItem>>() {
+                @Override public void call(List<PhotoItem> dirPhotoItems) {
+                  setDataToViewPager(dirPhotoItems);
+                }
+              });
+        } else {
+          setDataToViewPager(photoItems);
+        }
       }
     });
   }
@@ -111,7 +120,7 @@ public class PreviewFragment extends BaseFragment {
     updateCheck(position);
   }
 
-  private void updateCheck(int position){
+  private void updateCheck(int position) {
     cb.setSelected(dataSourceDelegate.getCheckedPhotos()
         .contains(previewAdapter.getPhotoItems().get(position).imgPath));
   }

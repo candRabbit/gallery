@@ -2,6 +2,7 @@ package com.cn.gallery.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,45 +83,50 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
       imageView = (ImageView) itemView.findViewById(R.id.iv);
       checkedStateView = itemView.findViewById(R.id.view_check_state);
       cb = (Button) itemView.findViewById(R.id.btn_cb);
-      cb.setOnClickListener(v -> {
-        v.setSelected(!v.isSelected());
-        if (v.isSelected()) {
-          if (!dataSourceDelegate.getCheckedPhotos().contains(photoItem.imgPath)) {
-            checkedStateView.setVisibility(View.VISIBLE);
-            if (galleryPresenter.getMode() == GalleryActivity.Mode.SINGLE) {
-              dataSourceDelegate.getCheckedPhotos().clear();
-            } else {
-              if (dataSourceDelegate.getCheckedPhotos().size() >= Constant.MAX_COUNT) {
-                Toast.makeText(context, String.format("选择数量不能超过%s张", Constant.MAX_COUNT),
-                    Toast.LENGTH_SHORT).show();
-                v.setSelected(false);
-                return;
+      cb.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          v.setSelected(!v.isSelected());
+          if (v.isSelected()) {
+            if (!dataSourceDelegate.getCheckedPhotos().contains(photoItem.imgPath)) {
+              checkedStateView.setVisibility(View.VISIBLE);
+              if (galleryPresenter.getMode() == GalleryActivity.Mode.SINGLE) {
+                dataSourceDelegate.getCheckedPhotos().clear();
+              } else {
+                if (dataSourceDelegate.getCheckedPhotos().size() >= dataSourceDelegate.getMaxCount()) {
+                  Toast.makeText(context, String.format("选择数量不能超过%s张", dataSourceDelegate.getMaxCount()),
+                      Toast.LENGTH_SHORT).show();
+                  v.setSelected(false);
+                  checkedStateView.setVisibility(View.GONE);
+                  return;
+                }
+              }
+              dataSourceDelegate.getCheckedPhotos().add(photoItem.imgPath);
+              if (galleryPresenter.getMode() == GalleryActivity.Mode.SINGLE) {
+                notifyDataSetChanged();
               }
             }
-            dataSourceDelegate.getCheckedPhotos().add(photoItem.imgPath);
-            if (galleryPresenter.getMode() == GalleryActivity.Mode.SINGLE) {
-              notifyDataSetChanged();
+          } else {
+            if (dataSourceDelegate.getCheckedPhotos().contains(photoItem.imgPath)) {
+              checkedStateView.setVisibility(View.GONE);
+              dataSourceDelegate.getCheckedPhotos().remove(photoItem.imgPath);
             }
-          }
-        } else {
-          if (dataSourceDelegate.getCheckedPhotos().contains(photoItem.imgPath)) {
-            checkedStateView.setVisibility(View.GONE);
-            dataSourceDelegate.getCheckedPhotos().remove(photoItem.imgPath);
           }
         }
       });
-      itemView.setOnClickListener(v -> {
-        if (0 == getAdapterPosition()) {
-          CameraUtils.takePhotoByCamera(context);
-        } else {
-          switch (galleryPresenter.getMode()) {
-            case CROP:
-              galleryPresenter.toCrop(photoItem.imgPath);
-              break;
-            case SINGLE:
-            case MULTI:
-              galleryPresenter.toPreview(getAdapterPosition()-1);
-              break;
+      itemView.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          if (0 == getAdapterPosition()) {
+            galleryPresenter.openCamera();
+          } else {
+            switch (galleryPresenter.getMode()) {
+              case CROP:
+                galleryPresenter.toCrop(photoItem.imgPath);
+                break;
+              case SINGLE:
+              case MULTI:
+                galleryPresenter.toPreview(getAdapterPosition()-1);
+                break;
+            }
           }
         }
       });
