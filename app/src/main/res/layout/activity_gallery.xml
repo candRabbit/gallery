@@ -13,6 +13,7 @@
       app:titleTextColor="@android:color/white"
       />
   <FrameLayout
+      android:background="#1c1b19"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:id="@+id/fl_content"

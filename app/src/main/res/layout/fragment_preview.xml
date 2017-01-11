@@ -8,5 +8,13 @@
       android:layout_height="match_parent"
       android:id="@+id/view_pager"
       />
-
+  <Button
+      android:background="@drawable/sel_photo_check"
+      android:id="@+id/btn_cb"
+      android:layout_marginTop="12dp"
+      android:layout_marginRight="12dp"
+      android:layout_alignParentRight="true"
+      android:layout_width="25dp"
+      android:layout_height="25dp"
+      />
 </RelativeLayout>

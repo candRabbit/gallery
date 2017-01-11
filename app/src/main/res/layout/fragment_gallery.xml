@@ -38,12 +38,11 @@
 
   <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="45dp"
+      android:layout_height="50dp"
       android:background="#60000000"
       >
     <TextView
         android:id="@+id/tv_check_photo_dir"
-        android:text="相册"
         android:clickable="true"
         android:gravity="center"
         android:textColor="@android:color/white"
@@ -51,7 +50,7 @@
         android:paddingRight="20dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_select_photo_dir"
+        android:background="@drawable/sel_select_photo_dir"
         />
   </RelativeLayout>
 

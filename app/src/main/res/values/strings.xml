@@ -1,3 +1,4 @@
 <resources>
   <string name="app_name">gallery</string>
+  <string name="toast_max_count_tip">选择数量不能超过%s张</string>
 </resources>

@@ -47,4 +47,8 @@ public class PreviewAdapter extends PagerAdapter {
     container.addView(photoView);
     return photoView;
   }
+
+  public List<PhotoItem> getPhotoItems(){
+    return photoItems;
+  }
 }

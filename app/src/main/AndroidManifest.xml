@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cn.gallery"
     >
+
   <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission-sdk-23 android:name="android.permission.CAMERA"/>
 
@@ -19,6 +20,10 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <activity
+        android:name="com.yalantis.ucrop.UCropActivity"
+        android:screenOrientation="portrait"
+        />
   </application>
 
 </manifest>

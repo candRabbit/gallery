@@ -32,7 +32,7 @@ public class CameraUtils {
   public static void takePhotoByCamera(Context context) {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     takePhotoPath = getPhotoPath();
-    intent.putExtra(MediaStore.EXTRA_OUTPUT, takePhotoPath);
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(takePhotoPath)));
     ((Activity) context).startActivityForResult(intent, CAMERA);
   }
 

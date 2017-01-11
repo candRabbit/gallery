@@ -60,10 +60,8 @@ public class PhotoDirAdapter extends RecyclerView.Adapter<PhotoDirAdapter.VH> {
 
     VH(View itemView) {
       super(itemView);
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          if (null != photoDirOnItemClickListener) photoDirOnItemClickListener.onClick(photoDir);
-        }
+      itemView.setOnClickListener(v -> {
+        if (null != photoDirOnItemClickListener) photoDirOnItemClickListener.onClick(photoDir);
       });
       imageView = (ImageView) itemView.findViewById(R.id.iv);
       tvDirName = (TextView) itemView.findViewById(R.id.tv_dir_name);

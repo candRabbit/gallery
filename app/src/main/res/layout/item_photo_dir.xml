@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/sel_item_list"
     >
   <RelativeLayout
       android:padding="8dp"
@@ -16,6 +17,7 @@
         android:layout_centerVertical="true"
         />
     <TextView
+        android:textColor="@android:color/black"
         android:layout_toRightOf="@+id/iv"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"

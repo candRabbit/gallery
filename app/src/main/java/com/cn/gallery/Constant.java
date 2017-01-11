@@ -23,37 +23,15 @@ import java.util.List;
 public class Constant {
 
   public final static String DIR = "dir";
+  public final static String POSITION = "position";
 
-  /**
-   * 获取系统的相册
-   */
-  public static List<PhotoItem> getSysPhotos(Context context) {
-    Cursor cursor = context.getContentResolver()
-        .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
-    if (null == cursor) return null;
-    List<PhotoItem> photoItems = new ArrayList<>();
-    while (cursor.moveToNext()) {
-      PhotoItem photoItem = new PhotoItem();
-      photoItem.imgPath =
-          cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-      photoItem.imgthumbnail = cursor.getString(MediaStore.Images.Thumbnails.MINI_KIND);
-      photoItem.addTime = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
-      File file = new File(photoItem.imgPath);
-      photoItem.dir = file.getParent();
-      photoItems.add(photoItem);
-    }
-    cursor.close();
-    Collections.sort(photoItems, new Comparator<PhotoItem>() {
-      @Override public int compare(PhotoItem o1, PhotoItem o2) {
-        if (o1.addTime > o2.addTime) {
-          return -1;
-        }
-        if (o1.addTime < o2.addTime) {
-          return 1;
-        }
-        return 0;
-      }
-    });
-    return photoItems;
-  }
+  public final static String COMPRESS_WIDTH = "compressWidth";
+  public final static String COMPRESS_HEIGHT = "compressHeight";
+  public final static String CROP_WIDTH = "cropWidth";
+  public final static String CROP_HEIGHT = "cropHeight";
+  public final static String MAX_COUNT = "maxCount";
+  public final static String MODE = "mode";
+  public final static String QUALITY = "quality";
+  public final static String SELECT_PHOTOS="selectPhotos";
+
 }

@@ -33,4 +33,7 @@ public interface DataSourceDelegate {
   List<String> getCheckedPhotos();
 
   Observable<List<PhotoItem>> getSysPhotosByDir(List<PhotoItem> photoItems, String dir);
+
+  int getMaxCount();
+
 }
