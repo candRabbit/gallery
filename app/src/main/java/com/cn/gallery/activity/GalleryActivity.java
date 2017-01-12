@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -52,6 +53,7 @@ public class GalleryActivity extends AppCompatActivity
   private GalleryFragment galleryFragment;
   private PreviewFragment previewFragment;
   private Toolbar toolbar;
+  private int column;
 
   private PhotoDir photoDir;
   private List<String> checkPhotos;
@@ -62,9 +64,6 @@ public class GalleryActivity extends AppCompatActivity
   private int maxCount;
   private int cropWidth;
   private int cropHeight;
-  private int compressWidth;
-  private int compressHeight;
-  private int quality;
 
   @Override public void toPreview(int position) {
     previewMode = PreviewMode.PREVIEW;
@@ -123,10 +122,8 @@ public class GalleryActivity extends AppCompatActivity
     maxCount = bundle.getInt(Constant.MAX_COUNT, 9);
     cropWidth = bundle.getInt(Constant.CROP_WIDTH, 240);
     cropHeight = bundle.getInt(Constant.CROP_HEIGHT, 240);
-    compressWidth = bundle.getInt(Constant.COMPRESS_WIDTH, 640);
-    compressHeight = bundle.getInt(Constant.COMPRESS_HEIGHT, 960);
-    quality = bundle.getInt(Constant.QUALITY, 70);
     mode = Mode.getMode(bundle.getInt(Constant.MODE, 0));
+    column = bundle.getInt(Constant.COLUMN,3);
   }
 
   private void updateView() {
@@ -232,7 +229,8 @@ public class GalleryActivity extends AppCompatActivity
     MenuItem menuItem = menu.findItem(R.id.menu_sure);
     Drawable drawable = menuItem.getIcon();
     drawable.mutate();
-    drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+    drawable.setColorFilter(ContextCompat.getColor(this, R.color.color_title),
+        PorterDuff.Mode.SRC_ATOP);
     menuItem.setIcon(drawable);
     return super.onCreateOptionsMenu(menu);
   }
@@ -248,6 +246,10 @@ public class GalleryActivity extends AppCompatActivity
 
   @Override public int getMaxCount() {
     return maxCount;
+  }
+
+  @Override public int getColumn() {
+    return column;
   }
 
   @Override public Mode getMode() {

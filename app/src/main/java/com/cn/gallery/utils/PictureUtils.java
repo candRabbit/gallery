@@ -25,24 +25,40 @@ import rx.schedulers.Schedulers;
 public class PictureUtils {
 
   /**
-   * 图片压缩
+   * 批量压缩图片
+   *
+   * @param imagePaths 路径
    */
   public static Observable<List<byte[]>> compress(List<String> imagePaths) {
+    return compress(imagePaths, 640, 960, 70);
+  }
+
+  /**
+   * 批量压缩图片
+   *
+   * @param imagePaths 路径
+   * @param compressWidth 缩放的宽
+   * @param compressHeight 缩放的高
+   * @param quality 质量值
+   */
+  public static Observable<List<byte[]>> compress(List<String> imagePaths, final int compressWidth,
+      final int compressHeight, final int quality) {
     return Observable.just(imagePaths).flatMap(new Func1<List<String>, Observable<List<byte[]>>>() {
       @Override public Observable<List<byte[]>> call(List<String> strings) {
         List<byte[]> bytes = new ArrayList<byte[]>();
         for (String imagePath : strings) {
-          bytes.add(compress(imagePath));
+          bytes.add(compress(imagePath, compressWidth, compressHeight, quality));
         }
         return Observable.just(bytes);
       }
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
   }
 
-  private static byte[] compress(String imagePath) {
-    Bitmap bitmap = getInSampleSizeBitmap(imagePath, 640, 960);
+  private static byte[] compress(String imagePath, int compressWidth, int compressHeight,
+      int quality) {
+    Bitmap bitmap = getInSampleSizeBitmap(imagePath, compressWidth, compressHeight);
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
     try {
       byteArrayOutputStream.flush();
       byteArrayOutputStream.close();
@@ -75,7 +91,7 @@ public class PictureUtils {
   }
 
   /**
-   * 读取图片的角度
+   * 读取图片的旋转角度
    */
   public static int readPictureDegree(String path) {
     if (android.text.TextUtils.isEmpty(path)) {
@@ -119,10 +135,7 @@ public class PictureUtils {
   }
 
   /**
-   * @param options
-   * @param reqWidth
-   * @param reqHeight
-   * @return
+   * 比例缩放
    */
   public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth,
       int reqHeight) {
@@ -145,5 +158,4 @@ public class PictureUtils {
 
     return inSampleSize;
   }
-
 }

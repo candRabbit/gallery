@@ -27,8 +27,7 @@ public class Constant {
   public final static int REQUEST_STORAGE_PERMISSION = 997;
   public final static int REQUEST_CAMERA_PERMISSION = 996;
 
-  public final static String COMPRESS_WIDTH = "compressWidth";
-  public final static String COMPRESS_HEIGHT = "compressHeight";
+  public final static String COLUMN = "column";
   public final static String CROP_WIDTH = "cropWidth";
   public final static String CROP_HEIGHT = "cropHeight";
   public final static String MAX_COUNT = "maxCount";

@@ -31,12 +31,6 @@ public class Gallery {
   public static class Builder {
     private Bundle bundle = new Bundle();
 
-    public Builder setCrompressSize(int compressWidth, int compressHeight) {
-      bundle.putInt(Constant.COMPRESS_WIDTH, compressWidth);
-      bundle.putInt(Constant.COMPRESS_HEIGHT, compressHeight);
-      return this;
-    }
-
     public Builder setCropSize(int cropWidth, int cropHeight) {
       bundle.putInt(Constant.CROP_WIDTH, cropWidth);
       bundle.putInt(Constant.CROP_HEIGHT, cropHeight);
@@ -50,6 +44,11 @@ public class Gallery {
 
     public Builder setMaxCount(int maxCount) {
       bundle.putInt(Constant.MAX_COUNT, maxCount);
+      return this;
+    }
+
+    public Builder setColumn(int column){
+      bundle.putInt(Constant.COLUMN,column);
       return this;
     }
 

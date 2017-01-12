@@ -41,4 +41,6 @@ public interface DataSourceDelegate {
    * 获取选中最大数量
    */
   int getMaxCount();
+
+  int getColumn();
 }

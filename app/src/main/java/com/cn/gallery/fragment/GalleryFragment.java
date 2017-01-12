@@ -61,7 +61,8 @@ public class GalleryFragment extends BaseFragment {
 
   @Override protected void initView(View view) {
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-    GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+    GridLayoutManager gridLayoutManager =
+        new GridLayoutManager(getActivity(), dataSourceDelegate.getColumn());
     recyclerView.setLayoutManager(gridLayoutManager);
     recyclerView.setHasFixedSize(true);
 
