@@ -32,8 +32,13 @@ public interface DataSourceDelegate {
    */
   List<String> getCheckedPhotos();
 
+  /**
+   * 根据目录获取图片
+   */
   Observable<List<PhotoItem>> getSysPhotosByDir(List<PhotoItem> photoItems, String dir);
 
+  /**
+   * 获取选中最大数量
+   */
   int getMaxCount();
-
 }
